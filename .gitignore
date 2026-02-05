@@ -14,7 +14,8 @@ dist/
 .env.*.local
 
 # SSH MCP Config
-ssh-mcp.config.json
+# Keep .ssh-mcp-config.json ignored for user privacy
+# ssh-mcp.config.json is committed as example config
 .ssh-mcp-config.json
 
 # IDE
