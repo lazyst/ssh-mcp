@@ -134,8 +134,8 @@ npm run build
 ### 配置文件位置（按优先级）
 
 1. `SSH_MCP_CONFIG` 环境变量指定路径
-2. 当前目录 `ssh-mcp.config.json`
-3. 当前目录 `.ssh-mcp-config.json`
+2. 当前项目目录 `ssh-mcp.config.json`
+3. 当前项目目录 `.ssh-mcp-config.json`
 4. 用户主目录 `.ssh-mcp-config.json`
 
 ### 配置文件参数说明
@@ -158,7 +158,9 @@ npm run build
 }
 ```
 
-### 使用配置文件中的服务器
+### ssh_execute_command - 执行命令
+
+**使用配置文件中的服务器：**
 
 ```json
 {
@@ -170,20 +172,51 @@ npm run build
 }
 ```
 
-### 覆盖配置文件中的参数
+**直接指定参数：**
+
+```json
+{
+  "tool": "ssh_execute_command",
+  "arguments": {
+    "host": "192.168.1.100",
+    "port": 22,
+    "username": "root",
+    "password": "123",
+    "command": "df -h",
+    "response_format": "markdown"
+  }
+}
+```
+
+**指定工作目录：**
 
 ```json
 {
   "tool": "ssh_execute_command",
   "arguments": {
     "server": "production",
-    "password": "override_password",
-    "command": "df -h"
+    "working_dir": "/var/www/app",
+    "command": "npm run build"
   }
 }
 ```
 
-### 直接指定参数（不使用配置）
+### ssh_upload_file - 上传文件
+
+**使用配置文件：**
+
+```json
+{
+  "tool": "ssh_upload_file",
+  "arguments": {
+    "server": "production",
+    "local_path": "./config/app.yml",
+    "remote_path": "/etc/myapp/config.yml"
+  }
+}
+```
+
+**直接指定参数：**
 
 ```json
 {
@@ -193,8 +226,93 @@ npm run build
     "port": 22,
     "username": "root",
     "password": "123",
-    "local_path": "./config.yml",
-    "remote_path": "/etc/app/config.yml"
+    "local_path": "./deploy.sh",
+    "remote_path": "/opt/deploy/deploy.sh"
+  }
+}
+```
+
+### ssh_download_file - 下载文件
+
+**从服务器下载日志文件：**
+
+```json
+{
+  "tool": "ssh_download_file",
+  "arguments": {
+    "server": "production",
+    "remote_path": "/var/log/app/error.log",
+    "local_path": "./logs/error.log"
+  }
+}
+```
+
+**指定输出格式：**
+
+```json
+{
+  "tool": "ssh_download_file",
+  "arguments": {
+    "server": "development",
+    "remote_path": "/etc/nginx/nginx.conf",
+    "local_path": "./config/nginx.conf",
+    "response_format": "json"
+  }
+}
+```
+
+### ssh_upload_directory - 上传目录
+
+**部署应用到服务器：**
+
+```json
+{
+  "tool": "ssh_upload_directory",
+  "arguments": {
+    "server": "production",
+    "local_path": "./dist",
+    "remote_path": "/var/www/myapp"
+  }
+}
+```
+
+**同步配置目录：**
+
+```json
+{
+  "tool": "ssh_upload_directory",
+  "arguments": {
+    "server": "development",
+    "local_path": "./config",
+    "remote_path": "/etc/myapp/config"
+  }
+}
+```
+
+### ssh_download_directory - 下载目录
+
+**下载服务器日志目录：**
+
+```json
+{
+  "tool": "ssh_download_directory",
+  "arguments": {
+    "server": "production",
+    "remote_path": "/var/log/myapp",
+    "local_path": "./logs"
+  }
+}
+```
+
+**备份项目目录：**
+
+```json
+{
+  "tool": "ssh_download_directory",
+  "arguments": {
+    "server": "production",
+    "remote_path": "/opt/project",
+    "local_path": "./backup/project"
   }
 }
 ```
@@ -222,4 +340,60 @@ npm run build
 | `timeout` | number | 否 | 超时时间（毫秒） |
 | `command` | string | 是 | 要执行的命令 |
 | `working_dir` | string | 否 | 工作目录 |
+| `response_format` | string | 否 | 输出格式（markdown/json） |
+
+## ssh_upload_file 参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `server` | string | 否 | 服务器名称（配置文件） |
+| `host` | string | 否 | SSH 服务器地址 |
+| `port` | number | 否 | SSH 端口，默认 22 |
+| `username` | string | 否 | 用户名 |
+| `password` | string | 否 | 密码 |
+| `timeout` | number | 否 | 超时时间（毫秒） |
+| `local_path` | string | 是 | 本地文件路径 |
+| `remote_path` | string | 是 | 远程目标路径 |
+| `response_format` | string | 否 | 输出格式（markdown/json） |
+
+## ssh_download_file 参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `server` | string | 否 | 服务器名称（配置文件） |
+| `host` | string | 否 | SSH 服务器地址 |
+| `port` | number | 否 | SSH 端口，默认 22 |
+| `username` | string | 否 | 用户名 |
+| `password` | string | 否 | 密码 |
+| `timeout` | number | 否 | 超时时间（毫秒） |
+| `remote_path` | string | 是 | 远程文件路径 |
+| `local_path` | string | 是 | 本地目标路径 |
+| `response_format` | string | 否 | 输出格式（markdown/json） |
+
+## ssh_upload_directory 参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `server` | string | 否 | 服务器名称（配置文件） |
+| `host` | string | 否 | SSH 服务器地址 |
+| `port` | number | 否 | SSH 端口，默认 22 |
+| `username` | string | 否 | 用户名 |
+| `password` | string | 否 | 密码 |
+| `timeout` | number | 否 | 超时时间（毫秒） |
+| `local_path` | string | 是 | 本地目录路径 |
+| `remote_path` | string | 是 | 远程目标目录 |
+| `response_format` | string | 否 | 输出格式（markdown/json） |
+
+## ssh_download_directory 参数
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `server` | string | 否 | 服务器名称（配置文件） |
+| `host` | string | 否 | SSH 服务器地址 |
+| `port` | number | 否 | SSH 端口，默认 22 |
+| `username` | string | 否 | 用户名 |
+| `password` | string | 否 | 密码 |
+| `timeout` | number | 否 | 超时时间（毫秒） |
+| `remote_path` | string | 是 | 远程目录路径 |
+| `local_path` | string | 是 | 本地目标目录 |
 | `response_format` | string | 否 | 输出格式（markdown/json） |
