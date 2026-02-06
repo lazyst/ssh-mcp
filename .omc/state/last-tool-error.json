@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd D:/aionui/workspace/claude-temp-1770300346152/ssh-mcp-main/ssh-mcp-main && git status 2>&1\",\"description\":\"Check git status\"}",
+  "error": "Exit code 128\nfatal: not a git repository (or any of the parent directories): .git",
+  "timestamp": "2026-02-06T01:16:56.057Z",
+  "retry_count": 1
+}
