@@ -4,7 +4,12 @@ import { Command } from 'commander';
 import { createConnection, executeCommand, closeConnection, resolveConnectionParams } from './utils/ssh.js';
 import { uploadFile, downloadFile, uploadDirectory, downloadDirectory, formatResultJSON, formatResultMarkdown } from './utils/fileTransfer.js';
 import { loadConfig, getServerNames } from './utils/config.js';
+import { readFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'));
 const program = new Command();
 
 interface CliOptions {
@@ -41,7 +46,8 @@ function output(result: any, json: boolean | undefined) {
 program
   .name('agent-ssh')
   .description('SSH remote management CLI - execute commands, transfer files via SSH')
-  .version('1.0.0');
+  .version(pkg.version)
+  .option('--mcp', 'Run as MCP server via stdio');
 
 program
   .command('exec')
@@ -270,34 +276,31 @@ program
     }
   });
 
-program
-  .command('serve')
-  .description('Run as MCP server via stdio (original mode)')
-  .action(async () => {
-    const { McpServer } = await import('@modelcontextprotocol/sdk/server/mcp.js');
-    const { StdioServerTransport } = await import('@modelcontextprotocol/sdk/server/stdio.js');
-    const { registerExecuteCommandTool } = await import('./tools/executeCommand.js');
-    const { registerFileTransferTools } = await import('./tools/fileTransfer.js');
-    const { registerListServersTool } = await import('./tools/listServers.js');
-
-    const server = new McpServer({ name: 'agent-ssh', version: '1.0.0' });
-    registerExecuteCommandTool(server);
-    registerFileTransferTools(server);
-    registerListServersTool(server);
-
-    try {
-      const configPath = (await import('./utils/config.js')).getConfigPath();
-      loadConfig();
-      const serverNames = getServerNames();
-      console.error(`SSH MCP server loaded config from: ${configPath}`);
-      console.error(`Available servers: ${serverNames.join(', ') || 'none'}`);
-    } catch (error: any) {
-      console.error(`SSH MCP server started without config file: ${error.message}`);
-    }
-
-    const transport = new StdioServerTransport();
-    await server.connect(transport);
-    console.error('SSH MCP server running via stdio');
-  });
-
 program.parse(process.argv);
+
+if (program.opts().mcp) {
+  const { McpServer } = await import('@modelcontextprotocol/sdk/server/mcp.js');
+  const { StdioServerTransport } = await import('@modelcontextprotocol/sdk/server/stdio.js');
+  const { registerExecuteCommandTool } = await import('./tools/executeCommand.js');
+  const { registerFileTransferTools } = await import('./tools/fileTransfer.js');
+  const { registerListServersTool } = await import('./tools/listServers.js');
+
+  const server = new McpServer({ name: pkg.name, version: pkg.version });
+  registerExecuteCommandTool(server);
+  registerFileTransferTools(server);
+  registerListServersTool(server);
+
+  try {
+    const configPath = (await import('./utils/config.js')).getConfigPath();
+    loadConfig();
+    const serverNames = getServerNames();
+    console.error(`SSH MCP server loaded config from: ${configPath}`);
+    console.error(`Available servers: ${serverNames.join(', ') || 'none'}`);
+  } catch (error: any) {
+    console.error(`SSH MCP server started without config file: ${error.message}`);
+  }
+
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+  console.error('SSH MCP server running via stdio');
+}

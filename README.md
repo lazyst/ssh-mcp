@@ -36,7 +36,7 @@ agent-ssh --help
 | `upload-dir <local> <remote>` | 上传目录 |
 | `download-dir <remote> <local>` | 下载目录 |
 | `list-servers` | 列出已配置的服务器 |
-| `serve` | 以 MCP Server 模式运行 |
+| `--mcp` | 以 MCP Server 模式运行 |
 
 ### 使用示例
 
@@ -119,11 +119,7 @@ agent-ssh exec "ls" -H 192.168.1.100 -u root -k ~/.ssh/id_rsa
 保留完整的 MCP 协议兼容性，可作为 Agent 的 MCP Server 使用。
 
 ```bash
-# 方式一：通过 CLI 启动
-agent-ssh serve
-
-# 方式二：直接运行
-node dist/index.js
+agent-ssh --mcp
 ```
 
 ### 可用 MCP 工具
@@ -143,8 +139,8 @@ node dist/index.js
 {
   "mcpServers": {
     "agent-ssh": {
-      "command": "node",
-      "args": ["/path/to/agent-ssh/dist/index.js"]
+      "command": "agent-ssh",
+      "args": ["--mcp"]
     }
   }
 }
