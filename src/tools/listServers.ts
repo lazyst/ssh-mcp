@@ -58,7 +58,7 @@ Args:
           return {
             content: [{
               type: 'text',
-              text: '# SSH Servers\n\nNo servers configured. Create a .agents-ssh-cli/config.json file in the working directory with server configurations.'
+              text: '# SSH Servers\n\nNo servers configured. Create a .agent-ssh/config.json file in the working directory with server configurations.'
             }],
             structuredContent: {
               servers: [],

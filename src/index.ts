@@ -16,7 +16,7 @@ import { loadConfig, getConfigPath, getServerNames } from './utils/config.js';
 
 // Create MCP server instance
 const server = new McpServer({
-  name: 'agents-ssh-cli',
+  name: 'agent-ssh',
   version: '1.0.0'
 });
 

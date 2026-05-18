@@ -1,11 +1,11 @@
 {
-  "name": "agents-ssh-cli",
+  "name": "agent-ssh",
   "version": "1.0.0",
   "description": "SSH remote management CLI - execute commands, upload/download files via SSH",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "agents-ssh-cli": "dist/cli.js"
+    "agent-ssh": "dist/cli.js"
   },
   "scripts": {
     "start": "node dist/cli.js",

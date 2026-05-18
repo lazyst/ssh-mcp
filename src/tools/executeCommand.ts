@@ -73,7 +73,7 @@ export function registerExecuteCommandTool(server: McpServer): void {
 **Connection Options:**
 
 1. Named server from config file (recommended)
-    - Create .agents-ssh-cli/config.json in the working directory
+    - Create .agent-ssh/config.json in the working directory
    - Use 'server' parameter to specify which server
 
 2. Direct parameters

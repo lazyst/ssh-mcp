@@ -1,4 +1,4 @@
-# agents-ssh-cli
+# agent-ssh
 
 SSH 远程管理 CLI 工具，支持在远程服务器上执行命令和传输文件。可独立作为 CLI 使用，也可作为 MCP Server 运行。
 
@@ -7,8 +7,8 @@ SSH 远程管理 CLI 工具，支持在远程服务器上执行命令和传输�
 ### 全局安装
 
 ```bash
-npm install -g agents-ssh-cli
-agents-ssh-cli --help
+npm install -g agent-ssh
+agent-ssh --help
 ```
 
 ### 本地安装
@@ -23,7 +23,7 @@ node dist/cli.js --help
 
 ```bash
 npm link
-agents-ssh-cli --help
+agent-ssh --help
 ```
 
 ## CLI 命令
@@ -42,22 +42,22 @@ agents-ssh-cli --help
 
 ```bash
 # 使用配置文件中的服务器
-agents-ssh-cli exec "df -h" -s production
-agents-ssh-cli upload ./file.txt /root/file.txt -s development
-agents-ssh-cli download /var/log/app.log ./logs/ -s production
-agents-ssh-cli list-servers
+agent-ssh exec "df -h" -s production
+agent-ssh upload ./file.txt /root/file.txt -s development
+agent-ssh download /var/log/app.log ./logs/ -s production
+agent-ssh list-servers
 
 # 直接指定连接参数
-agents-ssh-cli exec "ls -la" -H 192.168.1.100 -u root -p password
-agents-ssh-cli upload ./deploy.sh /opt/deploy.sh -H 192.168.1.100 -u root --private-key ~/.ssh/id_rsa
+agent-ssh exec "ls -la" -H 192.168.1.100 -u root -p password
+agent-ssh upload ./deploy.sh /opt/deploy.sh -H 192.168.1.100 -u root --private-key ~/.ssh/id_rsa
 
 # JSON 格式输出
-agents-ssh-cli exec "uname -a" -s production --json
+agent-ssh exec "uname -a" -s production --json
 ```
 
 ## 配置文件
 
-创建 `.agents-ssh-cli/config.json` 在命令执行的目录下：
+创建 `.agent-ssh/config.json` 在命令执行的目录下：
 
 ```json
 {
@@ -84,7 +84,7 @@ agents-ssh-cli exec "uname -a" -s production --json
 ### 配置文件搜索顺序
 
 1. `AGENTS_SSH_CLI_CONFIG` 环境变量指定路径
-2. 当前目录下的 `.agents-ssh-cli/config.json`
+2. 当前目录下的 `.agent-ssh/config.json`
 3. 项目目录下的 `ssh-cli.config.json`
 4. 当前目录下的 `ssh-cli.config.json`
 5. 用户主目录下的 `.ssh-cli-config.json`
@@ -106,12 +106,12 @@ agents-ssh-cli exec "uname -a" -s production --json
 
 **密码认证：**
 ```bash
-agents-ssh-cli exec "ls" -H 192.168.1.100 -u root -p mypassword
+agent-ssh exec "ls" -H 192.168.1.100 -u root -p mypassword
 ```
 
 **私钥认证：**
 ```bash
-agents-ssh-cli exec "ls" -H 192.168.1.100 -u root -k ~/.ssh/id_rsa
+agent-ssh exec "ls" -H 192.168.1.100 -u root -k ~/.ssh/id_rsa
 ```
 
 ## MCP Server 模式
@@ -120,7 +120,7 @@ agents-ssh-cli exec "ls" -H 192.168.1.100 -u root -k ~/.ssh/id_rsa
 
 ```bash
 # 方式一：通过 CLI 启动
-agents-ssh-cli serve
+agent-ssh serve
 
 # 方式二：直接运行
 node dist/index.js
@@ -142,9 +142,9 @@ node dist/index.js
 ```json
 {
   "mcpServers": {
-    "agents-ssh-cli": {
+    "agent-ssh": {
       "command": "node",
-      "args": ["/path/to/agents-ssh-cli/dist/index.js"]
+      "args": ["/path/to/agent-ssh/dist/index.js"]
     }
   }
 }

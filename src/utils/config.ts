@@ -3,7 +3,7 @@
  *
  * Loads SSH server configurations from JSON configuration file.
  *
- * Configuration file example (.agents-ssh-cli/config.json in CWD):
+ * Configuration file example (.agent-ssh/config.json in CWD):
  * {
  *   "servers": {
  *     "production": {
@@ -59,15 +59,15 @@ let cachedConfig: ConfigFile | null = null;
 /**
  * Get configuration file path
  * Searches in the following order:
- * 1. AGENTS_SSH_CLI_CONFIG environment variable
- * 2. .agents-ssh-cli/config.json in current working directory
+ * 1. AGENT_SSH_CONFIG environment variable
+ * 2. .agent-ssh/config.json in current working directory
  * 3. Project directory (where dist/index.js is located)
  * 4. Current working directory
  * 5. User home directory
  */
 export function getConfigPath(): string {
-  if (process.env.AGENTS_SSH_CLI_CONFIG) {
-    return process.env.AGENTS_SSH_CLI_CONFIG;
+  if (process.env.AGENT_SSH_CONFIG) {
+    return process.env.AGENT_SSH_CONFIG;
   }
 
   // Get the directory where the main script is located
@@ -86,8 +86,8 @@ export function getConfigPath(): string {
   }
 
   const configPaths = [
-    // .agents-ssh-cli directory in CWD
-    path.join(process.cwd(), '.agents-ssh-cli', 'config.json'),
+    // .agent-ssh directory in CWD
+    path.join(process.cwd(), '.agent-ssh', 'config.json'),
     // Project directory
     path.join(serverDir, 'ssh-cli.config.json'),
     path.join(serverDir, '.ssh-cli-config.json'),

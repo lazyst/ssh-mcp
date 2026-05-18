@@ -39,7 +39,7 @@ function output(result: any, json: boolean | undefined) {
 }
 
 program
-  .name('agents-ssh-cli')
+  .name('agent-ssh')
   .description('SSH remote management CLI - execute commands, transfer files via SSH')
   .version('1.0.0');
 
@@ -252,7 +252,7 @@ program
         output({ servers: names, count: names.length }, true);
       } else {
         if (names.length === 0) {
-          console.log('No servers configured. Create a .agents-ssh-cli/config.json file.');
+          console.log('No servers configured. Create a .agent-ssh/config.json file.');
         } else {
           console.log(`Configured servers (${names.length}):`);
           for (const name of names) {
@@ -280,7 +280,7 @@ program
     const { registerFileTransferTools } = await import('./tools/fileTransfer.js');
     const { registerListServersTool } = await import('./tools/listServers.js');
 
-    const server = new McpServer({ name: 'agents-ssh-cli', version: '1.0.0' });
+    const server = new McpServer({ name: 'agent-ssh', version: '1.0.0' });
     registerExecuteCommandTool(server);
     registerFileTransferTools(server);
     registerListServersTool(server);
