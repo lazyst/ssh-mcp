@@ -3,7 +3,7 @@
  *
  * Loads SSH server configurations from JSON configuration file.
  *
- * Configuration file example (ssh-mcp.config.json):
+ * Configuration file example (.agents-ssh-cli/config.json in CWD):
  * {
  *   "servers": {
  *     "production": {
@@ -59,14 +59,15 @@ let cachedConfig: ConfigFile | null = null;
 /**
  * Get configuration file path
  * Searches in the following order:
- * 1. SSH_MCP_CONFIG environment variable
- * 2. Project directory (where dist/index.js is located)
- * 3. Current working directory
- * 4. User home directory
+ * 1. AGENTS_SSH_CLI_CONFIG environment variable
+ * 2. .agents-ssh-cli/config.json in current working directory
+ * 3. Project directory (where dist/index.js is located)
+ * 4. Current working directory
+ * 5. User home directory
  */
 export function getConfigPath(): string {
-  if (process.env.SSH_MCP_CONFIG) {
-    return process.env.SSH_MCP_CONFIG;
+  if (process.env.AGENTS_SSH_CLI_CONFIG) {
+    return process.env.AGENTS_SSH_CLI_CONFIG;
   }
 
   // Get the directory where the main script is located
@@ -85,14 +86,16 @@ export function getConfigPath(): string {
   }
 
   const configPaths = [
+    // .agents-ssh-cli directory in CWD
+    path.join(process.cwd(), '.agents-ssh-cli', 'config.json'),
     // Project directory
-    path.join(serverDir, 'ssh-mcp.config.json'),
-    path.join(serverDir, '.ssh-mcp-config.json'),
+    path.join(serverDir, 'ssh-cli.config.json'),
+    path.join(serverDir, '.ssh-cli-config.json'),
     // Current working directory
-    'ssh-mcp.config.json',
-    '.ssh-mcp-config.json',
+    'ssh-cli.config.json',
+    '.ssh-cli-config.json',
     // User home directory
-    path.join(process.env.HOME || process.env.USERPROFILE || process.cwd(), '.ssh-mcp-config.json')
+    path.join(process.env.HOME || process.env.USERPROFILE || process.cwd(), '.ssh-cli-config.json')
   ];
 
   for (const p of configPaths) {

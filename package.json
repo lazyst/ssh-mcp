@@ -1,20 +1,26 @@
 {
-  "name": "ssh-mcp",
+  "name": "agents-ssh-cli",
   "version": "1.0.0",
-  "description": "MCP server for SSH connections - execute commands, upload/download files and directories",
+  "description": "SSH remote management CLI - execute commands, upload/download files via SSH",
   "type": "module",
   "main": "dist/index.js",
+  "bin": {
+    "agents-ssh-cli": "dist/cli.js"
+  },
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node dist/cli.js",
     "dev": "tsx watch src/index.ts",
+    "dev:cli": "tsx src/cli.ts",
     "build": "tsc",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prepack": "npm run build"
   },
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.6.1",
+    "commander": "^13.1.0",
     "ssh2": "^1.15.0",
     "zod": "^3.23.8"
   },
@@ -27,8 +33,8 @@
   "keywords": [
     "mcp",
     "ssh",
+    "cli",
     "remote",
-    "server",
     "command",
     "file-transfer"
   ],
